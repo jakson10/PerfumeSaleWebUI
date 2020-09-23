@@ -1,0 +1,31 @@
+﻿@model Perfume
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h3>Detaylar</h3>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            <label>Parfüm İsmi</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PerfumeName)
+        </dd>
+        <dt class="col-sm-2">
+            <label>Parfüm Markası</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Brand.BrandName)
+        </dd>
+        <dt class="col-sm-2">
+            <label>Parfüm Fiyatı</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+    </dl>
+</div>
+

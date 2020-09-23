@@ -1,0 +1,81 @@
+﻿@model Brand
+@{
+    ViewData["Title"] = "Create";
+    string errorMessage = (string)ViewBag.ErrorMessage;
+}
+
+@if (errorMessage != null)
+{
+    <div class="border border-dark p-3 mb-2">
+        <strong style="color:red">
+            @errorMessage
+        </strong>
+    </div>
+}
+
+
+<div class="main-w3pvt mian-content-wthree text-center">
+    <div class="container">
+        <br />
+        <hr />
+        <div class="row">
+            <div class="col-md-4" style="left:30%; right:30%">
+                <form method="post" asp-action="Create">
+                    <div class="form-group">
+                        <label asp-for="BrandName" class="control-label">Marka İsim</label>
+                        <input asp-for="BrandName" id="brandName" class="form-control" placeholder="Mark İsim" value="" />
+                        <p id="brandNameErrorMessage" style="color:red"> </p>
+                        <span asp-validation-for="BrandName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label">Açıklama</label>
+                        <textarea name="description" id="description" class="form-control" asp-for="Description" rows="5" cols="100"></textarea>
+                        <p id="descriptionErrorMessage" style="color:red"> </p>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="add_Btn" class="btn btn-block btn-info">Kaydet</button>
+                    </div>
+                    <div>
+                        <a asp-controller="Brand" asp-action="GetAll" class="btn btn-warning">Marka Listesi</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).on('click', '#add_Btn', function (e) {
+
+            var brandName = $("#brandName").val();
+            var description = $("#description").val();
+
+            if (brandName == "" && description == "") {
+                document.getElementById("brandNameErrorMessage").innerHTML = "Marka İsmi Boş Geçilemez...";
+                document.getElementById("descriptionErrorMessage").innerHTML = "Açıklama Kısmı Boş Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("brandNameErrorMessage").innerHTML = "";
+                document.getElementById("descriptionErrorMessage").innerHTML = "";
+            }
+            if (brandName == "") {
+                document.getElementById("brandNameErrorMessage").innerHTML = "Marka İsmi Boş Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("brandNameErrorMessage").innerHTML = "";
+            }
+            if (description == "") {
+                document.getElementById("descriptionErrorMessage").innerHTML = "Açıklama Kısmı Boş Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("descriptionErrorMessage").innerHTML = "";
+            }
+        });
+    </script>
+
+}

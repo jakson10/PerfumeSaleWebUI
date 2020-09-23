@@ -1,0 +1,86 @@
+﻿@model Brand
+@{
+    ViewData["Title"] = "Edit";
+    string errorMessage = (string)ViewBag.ErrorMessage;
+}
+
+@if (errorMessage != null)
+{
+    <div class="border border-dark p-3 mb-2">
+        <strong style="color:red">
+            @errorMessage
+        </strong>
+    </div>
+}
+
+<div class="main-w3pvt mian-content-wthree text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4" style="left:30%; right:30%">
+                <h4>Marka güncelle</h4>
+                <hr />
+                <form method="post" asp-action="Edit" class="p-3">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="BrandId" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="BrandName" class="control-label">Mark İsim</label>
+                        <input asp-for="BrandName" id="brandName" class="form-control" />
+                        <p id="brandNameErrorMessage" style="color:red"> </p>
+                        <span asp-validation-for="BrandName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label">Açıklama</label>
+                        <textarea name="description" id="description" class="form-control" asp-for="Description" rows="5" cols="100"></textarea>
+                        <p id="descriptionErrorMessage" style="color:red"> </p>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" id="delete_Btn" class="btn btn-block btn-info">Güncelle</button>
+                    </div>
+                    <div>
+                        <a asp-action="GetAll" class="btn btn-warning">Listeye geri dön</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).on('click', '#delete_Btn', function (e) {
+
+            var brandName = $("#brandName").val();
+            var description = $("#description").val();
+
+            if (brandName == "" && description == "") {
+                document.getElementById("brandNameErrorMessage").innerHTML = "Marka İsmi Boş Geçilemez...";
+                document.getElementById("descriptionErrorMessage").innerHTML = "Açıklama Kısmı Boş Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("brandNameErrorMessage").innerHTML = "";
+                document.getElementById("descriptionErrorMessage").innerHTML = "";
+            }
+            if (brandName == "") {
+                document.getElementById("brandNameErrorMessage").innerHTML = "Marka İsmi Boş Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("brandNameErrorMessage").innerHTML = "";
+            }
+            if (description == "") {
+                document.getElementById("descriptionErrorMessage").innerHTML = "Açıklama Kısmı Boş Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("descriptionErrorMessage").innerHTML = "";
+            }
+        });
+    </script>
+
+}

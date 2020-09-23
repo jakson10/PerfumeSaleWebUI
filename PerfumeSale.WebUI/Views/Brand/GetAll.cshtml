@@ -1,0 +1,54 @@
+﻿@model List<Brand>
+
+@{
+    ViewData["Title"] = "GetAll";
+}
+
+<p>
+    <a asp-controller="Brand" asp-action="Create" class="btn btn-lg btn-outline-primary">Marka Ekle</a>
+</p>
+<div class="card shadow mb-4">
+    <div class="card-header py-3" style="background-color:darkgrey">
+        <h6 class="m-0 font-weight-bold text-primary" style="color:coral">Marka Listesi</h6>
+    </div>
+    <div class="card-body" style="background-color:white">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            <label>Marka İsmi</label>
+                        </th>
+                        <th>
+                            <label>Açıklama</label>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BrandName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.BrandId" class="btn btn-info btn-sm">Güncelle</a>
+                            <a asp-action="Details" asp-route-id="@item.BrandId" class="btn btn-success btn-sm">Detay</a>
+                            <a asp-action="Delete" asp-route-id="@item.BrandId" class="btn btn-warning btn-sm">Sil</a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

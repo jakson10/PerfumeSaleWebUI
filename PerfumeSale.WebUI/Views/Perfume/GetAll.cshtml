@@ -1,0 +1,170 @@
+﻿@model IEnumerable<Perfume>
+
+
+@{
+    ViewData["Title"] = "GetAll";
+    string s = (string)ViewBag.SearchedWord;
+    var brands = (List<Brand>)ViewBag.Brands;
+
+}
+
+
+<p>
+    <a asp-controller="Perfume" asp-action="Create" class="btn btn-lg btn-outline-primary">Parfüm Ekle</a>
+</p>
+<br />
+
+@Html.Partial("_PartialPage", brands)
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link" id="reset">Parfümler</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Perfume" asp-action="GetAll" asp-route-brandId="@TempData["BrandId"]"  asp-route-price="2">En Yüksek Fiyat</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Perfume" asp-action="GetAll" asp-route-brandId="@TempData["BrandId"]" asp-route-price="1">En Düşük Fiyat</a>
+    </li>
+    <li>
+        @if (!string.IsNullOrWhiteSpace(s))
+        {
+            <div class="border border-dark p-3 mb-2">
+                <strong>
+                    @s
+                </strong> kelimesi için sonuçları görüyorsunuz.
+                <a asp-action="GetAll" class="float-right">Filtreyi kaldır</a>
+            </div>
+        }
+        <form method="get" asp-action="GetAll" asp-route-brandId="@TempData["BrandId"]" asp-route-price="@TempData["Price"]" class="text-right">
+            <input type="text" name="s" class="form-control-sm border border-primary border-top-0 border-left-0 border-right-0" style="margin-left: 490px;" />
+            <button type="submit" class="btn btn-primary btn-sm">Ara</button>
+        </form>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-sm-3 mt-3">
+                    <div class="card">
+                        <getperfumeimage id="item.PerfumeId"></getperfumeimage>
+                        <div class="card-body">
+                            <h5 class="card-title">@item.PerfumeName</h5>
+                            <p class="card-text text-truncate" data-toggle="popover" data-content='@item.Brand.BrandName' data-trigger="hover">@item.Brand.BrandName</p>
+                            <p class="card-text font-weight-bold text-primary">@String.Format("{0:C}", item.Price.ToString()) TL</p>
+                            <p class="card-text">
+                                <a data-whatever="@item.PerfumeId" class="btn btn-outline-secondary btn-sm" data-target="#addToBasket" data-toggle="modal">Sepete Ekle</a>
+                                <a asp-action="Edit" asp-route-id="@item.PerfumeId" class="btn btn-outline-info btn-sm">Güncelle</a>
+                                <a data-whatever="@item.PerfumeId" class="btn btn-outline-danger btn-sm" data-target="#deleteToBasket" data-toggle="modal">Sil</a>
+                                @*<a class="btn btn-outline-warning btn-sm" asp-action="Delete" asp-route-id="@item.PerfumeId">Sil</a>*@
+                            </p>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <br />
+    <div class="pagination" style="text-align:right">
+        @for (int i = 1; i <= (int)ViewBag.TotalPage; i++)
+        {
+            <div class="page-item @(ViewBag.ActivePage==i?"active":"")">
+                <a asp-action="GetAll" asp-controller="Perfume" asp-route-activePage="@i" asp-route-brandId="@TempData["BrandId"]" asp-route-price="@TempData["Price"]"  class="page-link">@i</a>
+            </div>
+        }
+
+    </div>
+</div>
+
+<!-- AddToBasketModal -->
+<div class="modal fade" id="addToBasket" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Sepete Ürün Ekleme </h5>
+            </div>
+            <div class="modal-body">
+                Seçmiş olduğunuz ürün başarılı bir şekilde sepetenize eklenmiştir.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="close" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DeleteModal -->
+<div class="modal fade" id="deleteToBasket" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ürün Silme Ekranı</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Seçmiş olduğunuz ürünü silmek istediğinizden eminmisiniz?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="close" data-dismiss="modal">Kapat</button>
+                <button type="button" id="btnSil" class="btn btn-primary">Evet Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.getJSON("/Perfume/GetAllBrands", null, function (data) {
+                var item = "";
+                $("#brandList").empty();
+
+                item += '<option value="0">-- Tümünü Listele --</option>';
+                $.each(data, function (i, parfume) {
+                    item += '<option value="' + parfume.value + '">' + parfume.text + '</option>'
+                });
+
+                $("#brandList").show();
+                $("#brandList").html(item);
+            });
+
+        });
+
+        $("#addToBasket").on("show.bs.modal", function (e) {
+            let button = $(e.relatedTarget);
+            let id = button.data("whatever");
+
+            $("#close").click(function () {
+                if (id > 0) {
+                    window.location.href = "http://localhost:52621/Perfume/AddToBasket/" + id;
+                }
+            });
+
+        });
+
+        $("#deleteToBasket").on("show.bs.modal", function (e) {
+            let button = $(e.relatedTarget);
+            let id = button.data("whatever");
+
+            $("#btnSil").click(function () {
+                window.location.href = "http://localhost:52621/Perfume/Delete/" + id;
+            });
+
+        });
+
+        $("#reset").click(function () {
+            window.location.href = "http://localhost:52621/Perfume/GetAll";
+        });
+    </script>
+}
+
+
+
+
+

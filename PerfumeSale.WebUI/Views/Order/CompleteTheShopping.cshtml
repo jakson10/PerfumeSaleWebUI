@@ -1,0 +1,75 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "CompleteTheShopping";
+}
+
+
+<div class="main-w3pvt mian-content-wthree text-center">
+    <div class="container">
+        <br />
+        <hr />
+        <div class="row">
+            <div class="col-md-4" style="left: 30%; top: 30%" ;>
+                <form method="post" asp-action="CompleteTheShopping">
+                    <div class="form-group">
+                        <label asp-for="ShipAddress" class="control-label">Teslimat Adresi</label>
+                        <textarea id="shipAddress" class="form-control" asp-for="ShipAddress" placeholder="Teslimat Adresi" rows="5" cols="100"></textarea>
+                        <p id="shipAddressErrorMessage" style="color:red"> </p>
+                        <span asp-validation-for="ShipAddress" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Phone" class="control-label">Telefon Numarası</label>
+                        <input asp-for="Phone" id="phone" class="form-control" placeholder="Telefon Numarası" />
+                        <p id="phoneErrorMessage" style="color:red"> </p>
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="add_Btn" class="btn btn-block btn-info">Kaydet</button>
+                    </div>
+                    <div>
+                        <a asp-controller="Brand" asp-action="GetAll" class="btn btn-warning">Marka Listesi</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+    <script type="text/javascript">
+        $(document).on('click', '#add_Btn', function (e) {
+
+            var shipAddress = $("#shipAddress").val();
+            var phone = $("#phone").val();
+
+            if (shipAddress == "" && phone == "") {
+                document.getElementById("shipAddressErrorMessage").innerHTML = "Teslimat Adresi Geçilemez...";
+                document.getElementById("phoneErrorMessage").innerHTML = "Telefon Numarası Boş Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("shipAddressErrorMessage").innerHTML = "";
+                document.getElementById("phoneErrorMessage").innerHTML = "";
+            }
+            if (shipAddress == "") {
+                document.getElementById("shipAddressErrorMessage").innerHTML = "Teslimat Adresi Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("shipAddressErrorMessage").innerHTML = "";
+            }
+            if (phone == "") {
+                document.getElementById("phoneErrorMessage").innerHTML = "Telefon Numarası Boş Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("phoneErrorMessage").innerHTML = "";
+            }
+        });
+
+        $('#phone').inputmask("(599) 999-9999");
+    </script>
+
+}

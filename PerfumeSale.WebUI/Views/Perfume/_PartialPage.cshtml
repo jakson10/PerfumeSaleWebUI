@@ -1,0 +1,23 @@
+﻿@model IEnumerable<Brand>
+
+
+<div class="form-group">
+    @{
+        if (Model.Any())
+        {
+            <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-header ">
+                        <a class="nav-link btn btn-outline-secondary btn-sm" asp-controller="Perfume" asp-action="GetAll">Tüm Liste</a>
+                    </li>
+                @foreach (var brand in Model)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-secondary btn-sm" asp-controller="Perfume" asp-action="GetAll" asp-route-brandId="@brand.BrandId">@brand.BrandName</a>
+                        <br />
+                    </li>
+
+                }
+            </ul>
+        }
+    }
+</div>

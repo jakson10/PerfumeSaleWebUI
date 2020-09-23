@@ -1,0 +1,75 @@
+﻿@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+
+<div class="alert alert-info text-center">
+    Sisteme Giriş Yapmak İçin Kullanıcı Adı ve Şifre Kısmına <b> unutmayacağınız bir şekilde </b> bilgilerinizi yazmanız yeterlidir.
+    <br />
+</div>
+
+<div class="main-w3pvt mian-content-wthree text-center">
+    <div class="container text-center">
+        <br />
+        <hr />
+        <div class="row">
+            <div class="col-md-4" style="left:30%; right:30%">
+                <form method="post" asp-action="Login">
+                    <div class="form-group">
+                        <label asp-for="FirstName" class="control-label">Kullanıcı Adı</label>
+                        <input asp-for="FirstName" id="firstName" class="form-control" placeholder="Kullanıcı Adı" value="" />
+                        <p id="firstNameErrorMessage" style="color:red"> </p>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LastName" class="control-label">Sifre</label>
+                        <input asp-for="LastName" type="password" id="lastName" class="form-control" placeholder="Sifre" value="" />
+                        <p id="lastNameErrorMessage" style="color:red"> </p>
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="add_Btn" class="btn btn-block btn-info">Giriş Yap</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).on('click', '#add_Btn', function (e) {
+
+            var firstName = $("#firstName").val();
+            var lastName = $("#lastName").val();
+
+
+            if (firstName == "" && lastName == "") {
+                document.getElementById("firstNameErrorMessage").innerHTML = "İsmi Boş Geçilemez...";
+                document.getElementById("lastNameErrorMessage").innerHTML = "Soyisim Boş Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("firstNameErrorMessage").innerHTML = "";
+                document.getElementById("lastNameErrorMessage").innerHTML = "";
+            }
+            if (firstName == "") {
+                document.getElementById("firstNameErrorMessage").innerHTML = "İsmi Boş Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("firstNameErrorMessage").innerHTML = "";
+            }
+            if (lastName == "") {
+                document.getElementById("lastNameErrorMessage").innerHTML = "Soyisim Boş Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("lastNameErrorMessage").innerHTML = "";
+            }
+        });
+    </script>
+
+}

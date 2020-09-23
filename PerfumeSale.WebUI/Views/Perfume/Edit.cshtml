@@ -1,0 +1,136 @@
+﻿@model PerfumeUpdateModel
+
+
+    @{
+        ViewData["Title"] = "Edit";
+        string errorMessage = (string)ViewBag.ErrorMessage;
+    }
+
+
+    @if (errorMessage != null)
+    {
+        <div class="border border-dark p-3 mb-2">
+            <strong style="color:red">
+                @errorMessage
+            </strong>
+        </div>
+    }
+
+    <div class="main-w3pvt mian-content-wthree text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4" style="left:30%; right:30%">
+                    <h4>Parfüm güncelle</h4>
+                    <hr />
+                    <form method="post" asp-action="Edit" class="p-3" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <input type="hidden" asp-for="PerfumeId" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="PerfumeName" class="control-label">Parfüm İsmi</label>
+                            <input asp-for="PerfumeName" id="perfumeName" class="form-control" />
+                            <p id="perfumeNameErrorMessage" style="color:red"> </p>
+                            <span asp-validation-for="PerfumeName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group" id="brandListDiv">
+                            <label asp-for="BrandId">Parfüm Markası</label>
+                            <select asp-for="BrandId" id="brandList" class="form-control">
+                            </select>
+                            <p id="brandNameErrorMessage" style="color:red"> </p>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Price" class="control-label">Fiyatı</label>
+                            <input asp-for="Price" id="price" class="form-control" />
+                            <p id="priceErrorMessage" style="color:red"> </p>
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Image"></label>
+                            <input class="form-control-file" type="file" asp-for="Image">
+                        </div>
+                        <div class="form-group">
+                            <label>Parfüm Resmi</label>
+                            <getperfumeimage id="Model.PerfumeId"></getperfumeimage>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" id="delete_Btn" class="btn btn-block btn-info">Güncelle</button>
+                        </div>
+                        <div>
+                            <a asp-action="GetAll" class="btn btn-warning">Listeye geri dön</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts{
+        <script type="text/javascript">
+        $(document).ready(function () {
+            $.getJSON("/Perfume/GetAllBrands", null, function (data) {
+                var item = "";
+                $("#brandList").empty();
+
+                item += '<option value="">-- Parfüm Markası Seçiniz --</option>';
+                $.each(data, function (i, parfume) {
+                    if (parfume.value ==@Model.BrandId) {
+                        item += '<option value="' + parfume.value + '" selected>' + parfume.text + '</option>'
+                    }
+                    else {
+                        item += '<option value="' + parfume.value + '">' + parfume.text + '</option>'
+                    }
+                });
+
+                $("#brandList").show();
+                $("#brandList").html(item);
+            });
+
+        });
+
+            $(document).on('click', '#delete_Btn', function (e) {
+
+                var perfumeName = $("#perfumeName").val();
+                var price = $("#price").val();
+                var brandId = $("#brandList").val();
+
+
+                if (perfumeName == "" && (brandId == "" || brandId == 0) && (price == "" || price <= 0)) {
+                    document.getElementById("perfumeNameErrorMessage").innerHTML = "Parfüm İsmi Boş Geçilemez...";
+                    document.getElementById("brandNameErrorMessage").innerHTML = "Marka İsmi Boş Geçilemez...";
+                    document.getElementById("priceErrorMessage").innerHTML = "Lütfen geçerli bir para miktari giriniz...";
+                    return false;
+                }
+                else {
+                    document.getElementById("perfumeNameErrorMessage").innerHTML = "";
+                    document.getElementById("brandNameErrorMessage").innerHTML = "";
+                    document.getElementById("priceErrorMessage").innerHTML = "";
+                }
+                if (perfumeName == "") {
+                    document.getElementById("perfumeNameErrorMessage").innerHTML = "Parfüm İsmi Boş Geçilemez...";
+                    return false;
+                }
+                else {
+                    document.getElementById("perfumeNameErrorMessage").innerHTML = "";
+                }
+
+                if (brandId == "" || brandId == 0) {
+                    document.getElementById("brandNameErrorMessage").innerHTML = "Marka İsmi Boş Geçilemez...";
+                    return false;
+                }
+                else {
+                    document.getElementById("brandNameErrorMessage").innerHTML = "";
+                }
+                if (price == "" || price <= 0) {
+                    document.getElementById("priceErrorMessage").innerHTML = "Lütfen geçerli bir para miktari giriniz...";
+                    return false;
+                }
+                else {
+                    document.getElementById("priceErrorMessage").innerHTML = "";
+                }
+            });
+        </script>
+    }

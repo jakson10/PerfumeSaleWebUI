@@ -1,0 +1,71 @@
+﻿@model List<BasketModel>
+
+@{
+    ViewData["Title"] = "ViewCart";
+    double totalPrice = 0;
+}
+
+<h1>Ürünlerim</h1>
+
+@if (Model.Count > 0)
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Ürün İsmi</th>
+                <th>Adeti</th>
+                <th>Fiyatı</th>
+                <th>Resmi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.PerfumeName</td>
+                    <td>@item.Count</td>
+                    <td>@String.Format("{0:C}", (item.Price * item.Count).ToString()) TL</td>
+                    @{totalPrice += (item.Price * item.Count); }
+                    <td> <getperfumeimagesmall id="item.PerfumeId"> </getperfumeimagesmall> </td>
+
+                    <td>
+                        <a asp-action="ViewCart" asp-controller="Perfume" asp-route-decrease="@item.PerfumeId" class="btn btn-outline-info btn-sm">Ürün Adeti Azalt</a>
+                        <a asp-action="ViewCart" asp-controller="Perfume" asp-route-remove="@item.PerfumeId" class="btn btn-outline-danger btn-sm">Ürünü Kaldır</a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+        <tr>
+            <th>Toplam Ödemeniz Gereken Miktar</th>
+            <td></td>
+            <td>
+                @if (Model.Count > 0)
+                {@String.Format("{0:C}", totalPrice.ToString())} TL
+            </td>
+        </tr>
+
+    </table>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="GetAll" asp-controller="Perfume" class="btn btn-info">Alışverişe Devam Et</a>
+        <a asp-action="CompleteTheShopping" asp-controller="Order" asp-route-perfumes="@Model.ToList()" class="btn btn-info">Alışverişi Tamamla</a>
+    }
+    else
+    {
+        <a asp-action="GetAll" asp-controller="Perfume" class="btn btn-info">Alışverişe Devam Et</a>
+        <div class="alert alert-info">
+            Alışverişinizi tamamlamak için giriş yapınız.
+        </div>
+    }
+
+}
+else
+{
+    <div class="alert alert-info text-center">
+        Sepetinizde hiç ürün bulunmuyor. Alışverişe devam edin:
+        <a asp-action="GetAll" asp-controller="Perfume" class="btn btn-info">Alışverişe Devam Et</a>
+    </div>
+}
+
+

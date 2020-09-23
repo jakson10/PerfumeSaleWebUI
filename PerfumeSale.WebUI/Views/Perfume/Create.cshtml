@@ -1,0 +1,120 @@
+﻿@model PerfumeAddModel
+
+@{
+    ViewData["Title"] = "Create";
+    string errorMessage = (string)ViewBag.ErrorMessage;
+}
+
+@if (errorMessage != null)
+{
+    <div class="border border-dark p-3 mb-2">
+        <strong style="color:red">
+            @errorMessage
+        </strong>
+    </div>
+}
+
+
+<div class="main-w3pvt mian-content-wthree text-center">
+    <div class="container" style="left:30%; right:30%">
+        <br />
+        <hr />
+        <div class="row">
+            <div class="col-md-4" style="left:30%; right:30%">
+                <form method="post" asp-action="Create" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label asp-for="PerfumeName" class="control-label">Parfüm ismi</label>
+                        <input asp-for="PerfumeName" id="perfumeName" class="form-control" placeholder="Parfüm ismi" value="" />
+                        <p id="perfumeNameErrorMessage" style="color:red"> </p>
+                        <span asp-validation-for="PerfumeName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group" id="brandListDiv">
+                        <label asp-for="BrandId">Parfüm Markası</label>
+                        <select asp-for="BrandId" id="brandList" class="form-control">
+                        </select>
+                        <p id="brandNameErrorMessage" style="color:red"> </p>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price" class="control-label">Parfüm Fiyatı</label>
+                        <input asp-for="Price" id="price" class="form-control" placeholder="Fiyatı" value="" />
+                        <p id="priceErrorMessage" style="color:red"> </p>
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Image">Fotoğraf(Yüklenmez ise default bir fotoğraf atar)</label>
+                        <input class="form-control-file" type="file" asp-for="Image">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="add_Btn" class="btn btn-block btn-info">Kaydet</button>
+                    </div>
+                    <div>
+                        <a asp-controller="Perfume" asp-action="GetAll" class="btn btn-warning">Parfüm Listesi</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.getJSON("/Perfume/GetAllBrands", null, function (data) {
+                var item = "";
+                $("#brandList").empty();
+
+                item += '<option value="0">-- Parfüm Markası Seçiniz --</option>';
+                $.each(data, function (i, parfume) {
+                    item += '<option value="' + parfume.value + '">' + parfume.text + '</option>'
+                });
+
+                $("#brandList").show();
+                $("#brandList").html(item);
+            });
+
+        });
+
+        $(document).on('click', '#add_Btn', function (e) {
+
+            var perfumeName = $("#perfumeName").val();
+            var price = $("#price").val();
+            var brandId = $("#brandList").val();
+
+
+            if (perfumeName == "" && (brandId == "" || brandId == 0) && (price == "" || price <= 0)) {
+                document.getElementById("perfumeNameErrorMessage").innerHTML = "Parfüm İsmi Boş Geçilemez...";
+                document.getElementById("brandNameErrorMessage").innerHTML = "Marka İsmi Boş Geçilemez...";
+                document.getElementById("priceErrorMessage").innerHTML = "Lütfen geçerli bir para miktari giriniz...";
+                return false;
+            }
+            else {
+                document.getElementById("perfumeNameErrorMessage").innerHTML = "";
+                document.getElementById("brandNameErrorMessage").innerHTML = "";
+                document.getElementById("priceErrorMessage").innerHTML = "";
+            }
+            if (perfumeName == "") {
+                document.getElementById("perfumeNameErrorMessage").innerHTML = "Parfüm İsmi Boş Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("perfumeNameErrorMessage").innerHTML = "";
+            }
+
+            if (brandId == "" || brandId == 0) {
+                document.getElementById("brandNameErrorMessage").innerHTML = "Marka İsmi Boş Geçilemez...";
+                return false;
+            }
+            else {
+                document.getElementById("brandNameErrorMessage").innerHTML = "";
+            }
+            if (price == "" || price <= 0) {
+                document.getElementById("priceErrorMessage").innerHTML = "Lütfen geçerli bir para miktari giriniz...";
+                return false;
+            }
+            else {
+                document.getElementById("priceErrorMessage").innerHTML = "";
+            }
+        });
+
+    </script>
+}
